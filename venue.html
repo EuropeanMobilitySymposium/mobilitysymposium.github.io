@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Venue &middot; European Mobility Symposium</title>
+  <meta name="description" content="Find the venue, travel information and accommodation for the European Mobility Symposium at the University of Exeter." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="sr-only" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__brand" href="index.html">
+        <span class="nav__mark">EMS</span>
+        <span>European Mobility Symposium</span>
+      </a>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation">&#9776;</button>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="program.html">Program</a></li>
+        <li><a href="attendees.html">Attendees</a></li>
+        <li><a href="venue.html" class="is-active">Venue</a></li>
+        <li><a href="past-editions.html">Past editions</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="page-head">
+      <div class="container">
+        <p class="eyebrow" style="color: var(--eu-gold);">Venue</p>
+        <h1>The Sky Deck, University of Exeter</h1>
+        <p>23&ndash;24 September 2026. Sessions take place in the Sky Deck on the University of Exeter campus.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="split">
+          <div>
+            <h2>Getting here</h2>
+            <p>Sessions take place in the Sky Deck, on the University of Exeter campus, within easy reach of Exeter city centre and with strong rail, road and air connections to the rest of the UK and Europe.</p>
+            <ul class="info-list">
+              <li><strong>Venue</strong> <span>The Sky Deck, University of Exeter</span></li>
+              <li><strong>Address</strong> <span>University of Exeter, Stocker Road, Exeter, EX4 4PY, UK</span></li>
+              <li><strong>By rail</strong> <span>Exeter St Davids and Exeter Central stations, direct from London in ~2 hours</span></li>
+              <li><strong>By air</strong> <span>Exeter Airport; or Bristol / Heathrow with onward rail</span></li>
+              <li><strong>By road</strong> <span>Close to the M5; on-campus and city parking available</span></li>
+            </ul>
+          </div>
+          <div>
+            <iframe
+              class="map-embed"
+              title="Google map of the Sky Deck, University of Exeter"
+              src="https://www.google.com/maps?q=Sky+Deck,+University+of+Exeter,+Stocker+Road,+Exeter+EX4+4PY&output=embed"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint">
+      <div class="container">
+        <p class="eyebrow">Plan your stay</p>
+        <h2>Accommodation &amp; nearby</h2>
+        <div class="grid grid--3" style="margin-top: 2rem;">
+          <article class="card">
+            <img class="card__icon-img" src="icons/hotel.png" alt="" />
+            <h3>Hotels</h3>
+            <p>A range of hotels in Exeter city centre, a short journey from campus. A recommended list will be added here.</p>
+          </article>
+          <article class="card">
+            <img class="card__icon-img" src="icons/food.png" alt="" />
+            <h3>Dining</h3>
+            <p>Cafés, restaurants and the historic quayside are all within easy reach for evenings and breaks.</p>
+          </article>
+          <article class="card">
+            <img class="card__icon-img" src="icons/landmark.png" alt="" />
+            <h3>Things to do</h3>
+            <p>Explore Exeter's cathedral, the surrounding Devon countryside and the South West coast.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container text-center">
+        <h2>Accessibility</h2>
+        <p class="lead" style="margin: 0 auto;">The campus is step-free across the main symposium spaces. If you have specific access requirements, please contact the organising team.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <p class="footer-copy">&copy; 2026 European Mobility Symposium</p>
+      <a href="#" class="footer-email" onclick="return emailUs(event)" aria-label="Email the symposium team">
+        <span>Contact</span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="m3 7 9 6 9-6"></path>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    function emailUs(e) {
+      if (e) e.preventDefault();
+      var user = 'ems';
+      var domain = 'biocomplexlab.org';
+      window.location.href = 'mailto:' + user + String.fromCharCode(64) + domain;
+      return false;
+    }
+    (function () {
+      var toggle = document.querySelector('.nav__toggle');
+      var links = document.getElementById('nav-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', function () {
+          var open = links.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

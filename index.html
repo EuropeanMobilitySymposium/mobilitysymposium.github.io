@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>European Mobility Symposium</title>
+  <meta name="description" content="The European Mobility Symposium brings together researchers, practitioners and policymakers shaping the future of sustainable mobility across Europe." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="sr-only" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary">
+      <a class="nav__brand" href="index.html">
+        <span class="nav__mark">EMS</span>
+        <span>European Mobility Symposium</span>
+      </a>
+      <button class="nav__toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation">&#9776;</button>
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html" class="is-active">Home</a></li>
+        <li><a href="program.html">Program</a></li>
+        <li><a href="attendees.html">Attendees</a></li>
+        <li><a href="venue.html">Venue</a></li>
+        <li><a href="past-editions.html">Past editions</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Exeter &middot; United Kingdom</p>
+        <h1>European Mobility Symposium 2026</h1>
+        <p class="hero__lead">A two-day symposium for researchers, practitioners and policymakers working on sustainable transport and mobility.</p>
+        <div class="hero__meta">
+          <div class="hero__meta-item"><span>When</span>&nbsp;23&ndash;24 September 2026</div>
+          <div class="hero__meta-item"><span>Where</span>&nbsp;Sky Deck, University of Exeter</div>
+          <div class="hero__meta-item"><span>Format</span>&nbsp;In person</div>
+        </div>
+        <p style="margin: 0 0 1.25rem; color: var(--green-tint); font-size: 0.95rem;">An invitation-only event.</p>
+        <div class="hero__actions">
+          <a class="btn btn--primary" href="program.html">View programme</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container text-center">
+        <h2>About the symposium</h2>
+        <p class="lead" style="margin: 0 auto;">The European Mobility Symposium brings together researchers, practitioners and policymakers to exchange ideas and evidence on European transport and mobility. Add a short paragraph here describing this year's theme and scope.</p>
+      </div>
+    </section>
+
+    <section class="section section--tint">
+      <div class="container">
+        <div class="grid grid--3">
+          <article class="card">
+            <img class="card__icon-img" src="icons/mobility.png" alt="" />
+            <h3>Research &amp; innovation</h3>
+            <p>Cutting-edge findings across transport modelling, electrification, active travel and intelligent systems.</p>
+          </article>
+          <article class="card">
+            <img class="card__icon-img" src="icons/europe.png" alt="" />
+            <h3>European perspective</h3>
+            <p>Cross-border collaboration and policy insight drawn from cities and regions across the continent.</p>
+          </article>
+          <article class="card">
+            <img class="card__icon-img" src="icons/chat.png" alt="" />
+            <h3>Dialogue &amp; networking</h3>
+            <p>Keynotes, panels and informal sessions designed to spark new partnerships and ideas.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container text-center">
+        <h2>Hosting institution</h2>
+        <img class="host-logo" src="logos/Exeter.png" alt="University of Exeter" />
+      </div>
+    </section>
+
+    <section class="section section--tint">
+      <div class="container text-center">
+        <h2>Supporting institutions</h2>
+        <p class="lead" style="margin: 0 auto;">Logos of supporting institutions will appear here.</p>
+        <div class="logo-row">
+          <img src="logos/NE-London.png" alt="Northeastern University London" style="max-height: 90px; width: auto;" />
+          <div class="logo-placeholder">Logo</div>
+          <div class="logo-placeholder">Logo</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <p class="footer-copy">&copy; 2026 European Mobility Symposium</p>
+      <a href="#" class="footer-email" onclick="return emailUs(event)" aria-label="Email the symposium team">
+        <span>Contact</span>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          <path d="m3 7 9 6 9-6"></path>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    function emailUs(e) {
+      if (e) e.preventDefault();
+      var user = 'ems';
+      var domain = 'biocomplexlab.org';
+      window.location.href = 'mailto:' + user + String.fromCharCode(64) + domain;
+      return false;
+    }
+    (function () {
+      var toggle = document.querySelector('.nav__toggle');
+      var links = document.getElementById('nav-links');
+      if (toggle && links) {
+        toggle.addEventListener('click', function () {
+          var open = links.classList.toggle('is-open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
