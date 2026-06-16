@@ -29,7 +29,10 @@
 
   <main id="main">
     <section class="hero">
-      <div class="container">
+      <div class="hero__anim" aria-hidden="true">
+        <svg id="hero-map" viewBox="0 0 700 560" preserveAspectRatio="xMidYMid slice"></svg>
+      </div>
+      <div class="container hero__content">
         <p class="eyebrow">Exeter &middot; United Kingdom</p>
         <h1>European Mobility Symposium 2026</h1>
         <p class="hero__lead">A two-day symposium for researchers, practitioners and policymakers working on sustainable transport and mobility.</p>
@@ -125,6 +128,119 @@
           toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
         });
       }
+    })();
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+  <script>
+    (function () {
+      var el = document.getElementById('hero-map');
+      if (!el || typeof d3 === 'undefined' || typeof topojson === 'undefined') return;
+
+      var W = 700, H = 560;
+      var cities = {
+        Exeter:[-3.53,50.72], London:[-0.13,51.51], Dublin:[-6.26,53.35], Paris:[2.35,48.85],
+        Brussels:[4.35,50.85], Amsterdam:[4.90,52.37], Berlin:[13.40,52.52], Munich:[11.58,48.14],
+        Zurich:[8.54,47.37], Vienna:[16.37,48.21], Prague:[14.42,50.08], Warsaw:[21.01,52.23],
+        Copenhagen:[12.57,55.68], Stockholm:[18.07,59.33], Oslo:[10.75,59.91], Helsinki:[24.94,60.17],
+        Madrid:[-3.70,40.42], Barcelona:[2.17,41.39], Lisbon:[-9.14,38.72], Rome:[12.50,41.90],
+        Athens:[23.73,37.98], Budapest:[19.04,47.50], Milan:[9.19,45.46]
+      };
+      var links = [
+        ['Exeter','London'],['Exeter','Dublin'],['Exeter','Paris'],['Exeter','Madrid'],['Exeter','Berlin'],
+        ['Exeter','Rome'],['Exeter','Lisbon'],['Exeter','Stockholm'],['Exeter','Athens'],
+        ['London','Paris'],['London','Amsterdam'],['Paris','Madrid'],['Paris','Berlin'],['Paris','Milan'],
+        ['Paris','Brussels'],['Berlin','Warsaw'],['Berlin','Copenhagen'],['Berlin','Prague'],['Berlin','Vienna'],
+        ['Madrid','Barcelona'],['Madrid','Lisbon'],['Rome','Milan'],['Rome','Athens'],['Rome','Vienna'],
+        ['Vienna','Budapest'],['Warsaw','Helsinki'],['Copenhagen','Stockholm'],['Stockholm','Oslo'],
+        ['Stockholm','Helsinki'],['Munich','Zurich'],['Zurich','Milan'],['Amsterdam','Berlin']
+      ];
+
+      function arc(a, b) {
+        if (!a || !b) return "";
+        var x1=a[0], y1=a[1], x2=b[0], y2=b[1];
+        var dx=x2-x1, dy=y2-y1, dr=Math.hypot(dx,dy) || 1;
+        var mx=(x1+x2)/2, my=(y1+y2)/2, k=dr*0.22;
+        return 'M'+x1+','+y1+' Q'+(mx-dy/dr*k)+','+(my+dx/dr*k)+' '+x2+','+y2;
+      }
+
+      var SVGNS = 'http://www.w3.org/2000/svg';
+      var svg = d3.select('#hero-map');
+      d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function (world) {
+        var allF = topojson.feature(world, world.objects.countries).features;
+        var europe = allF.filter(function (f) { var c = d3.geoCentroid(f); return c[0]>-25 && c[0]<45 && c[1]>34 && c[1]<72; });
+        var proj = d3.geoMercator().fitExtent([[20,20],[W-20,H-20]], {type:'FeatureCollection', features:europe});
+        var path = d3.geoPath(proj);
+        svg.append('g').selectAll('path').data(europe).join('path')
+          .attr('fill','rgba(159,225,203,0.05)').attr('stroke','rgba(159,225,203,0.20)').attr('stroke-width',0.6).attr('d',path);
+
+        var P = {};
+        Object.keys(cities).forEach(function (k) { P[k] = proj(cities[k]); });
+
+        var netG = svg.append('g');
+        var signalG = svg.append('g').node();
+        var ringG = svg.append('g').node();
+        var nodeG = svg.append('g');
+        links.forEach(function (l) { netG.append('path').attr('fill','none').attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width',1).attr('d', arc(P[l[0]],P[l[1]])); });
+        Object.keys(P).forEach(function (k) {
+          var hub = k === 'Exeter';
+          nodeG.append('circle').attr('cx',P[k][0]).attr('cy',P[k][1]).attr('r', hub?4:2)
+            .attr('fill', hub ? '#FFCC00' : 'rgba(255,255,255,0.7)');
+        });
+
+        var names = Object.keys(P);
+        var byCity = {};
+        links.forEach(function (l) { (byCity[l[0]]=byCity[l[0]]||[]).push(l[1]); (byCity[l[1]]=byCity[l[1]]||[]).push(l[0]); });
+
+        var ripples = [], signals = [];
+        var RING_MS = 2600, RING_MAXR = 46, SIG_MS = 1700;
+
+        function spawn(city) {
+          var c = P[city];
+          var ring = document.createElementNS(SVGNS, 'circle');
+          ring.setAttribute('fill','none'); ring.setAttribute('stroke-width','1.2');
+          ring.setAttribute('cx', c[0]); ring.setAttribute('cy', c[1]); ring.setAttribute('r', 4);
+          ring.setAttribute('stroke', city === 'Exeter' ? '#FFCC00' : '#9FE1CB');
+          ringG.appendChild(ring);
+          ripples.push({ el: ring, t0: performance.now() });
+
+          (byCity[city] || []).forEach(function (nb) {
+            if (Math.random() < 0.55) return;
+            var sig = document.createElementNS(SVGNS, 'path');
+            sig.setAttribute('fill','none'); sig.setAttribute('stroke','#FFCC00');
+            sig.setAttribute('stroke-width','1.4'); sig.setAttribute('stroke-linecap','round');
+            sig.setAttribute('d', arc(P[city], P[nb]));
+            signalG.appendChild(sig);
+            var len = sig.getTotalLength();
+            sig.setAttribute('stroke-dasharray', len);
+            sig.setAttribute('stroke-dashoffset', len);
+            signals.push({ el: sig, len: len, t0: performance.now() });
+          });
+        }
+
+        function loop(now) {
+          for (var i = ripples.length - 1; i >= 0; i--) {
+            var r = ripples[i], p = (now - r.t0) / RING_MS;
+            if (p >= 1) { r.el.remove(); ripples.splice(i, 1); continue; }
+            r.el.setAttribute('r', 4 + p * RING_MAXR);
+            r.el.setAttribute('opacity', (1 - p) * 0.7);
+          }
+          for (var j = signals.length - 1; j >= 0; j--) {
+            var s = signals[j], q = (now - s.t0) / SIG_MS;
+            if (q >= 1) { s.el.remove(); signals.splice(j, 1); continue; }
+            var draw = Math.min(q / 0.6, 1);
+            s.el.setAttribute('stroke-dashoffset', s.len * (1 - draw));
+            s.el.setAttribute('opacity', q < 0.6 ? 0.8 : (1 - (q - 0.6) / 0.4) * 0.8);
+          }
+          requestAnimationFrame(loop);
+        }
+        requestAnimationFrame(loop);
+
+        spawn('Exeter');
+        setInterval(function () { spawn(names[(Math.random() * names.length) | 0]); }, 1100);
+        setInterval(function () { spawn('Exeter'); }, 4200);
+      }).catch(function (e) { console.error('Hero map:', e); });
     })();
   </script>
 </body>
